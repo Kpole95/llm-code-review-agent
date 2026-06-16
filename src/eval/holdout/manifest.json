@@ -1,0 +1,94 @@
+{
+  "snippets": [
+    {
+      "id": "ho_sql_format_01",
+      "file": "snippets/ho_sql_format_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [7, 10], "category": "sql_injection", "severity": "high"}
+      ],
+      "note": "SQL built with % string formatting — different pattern from f-string, tests generalization"
+    },
+    {
+      "id": "ho_hardcoded_jwt_01",
+      "file": "snippets/ho_hardcoded_jwt_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [3, 3], "category": "hardcoded_secret", "severity": "high"}
+      ],
+      "note": "JWT secret hardcoded — tests that pipeline catches secrets beyond API keys"
+    },
+    {
+      "id": "ho_zip_traversal_01",
+      "file": "snippets/ho_zip_traversal_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [9, 9], "category": "path_traversal", "severity": "high"}
+      ],
+      "note": "Zip Slip attack — path traversal via archive extraction, a different vector"
+    },
+    {
+      "id": "ho_race_condition_01",
+      "file": "snippets/ho_race_condition_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [8, 8], "category": "race_condition", "severity": "medium"}
+      ],
+      "note": "TOCTOU race condition — tests a subtler pattern the pipeline hasn't seen"
+    },
+    {
+      "id": "ho_dead_code_01",
+      "file": "snippets/ho_dead_code_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [4, 4], "category": "dead_code", "severity": "low"}
+      ],
+      "note": "Unreachable return after return — tests logic bugs not security issues"
+    },
+    {
+      "id": "ho_integer_overflow_01",
+      "file": "snippets/ho_integer_overflow_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [1, 7], "category": "error_handling", "severity": "low"}
+      ],
+      "note": "Missing input validation for discount_percent > 100 — subtle logic bug"
+    },
+    {
+      "id": "ho_js_command_injection_01",
+      "file": "snippets/ho_js_command_injection_01.js",
+      "language": "javascript",
+      "expected_findings": [
+        {"line_range": [4, 4], "category": "command_injection", "severity": "high"}
+      ],
+      "note": "Node.js child_process exec with unsanitized input — JS command injection"
+    },
+    {
+      "id": "ho_prototype_pollution_01",
+      "file": "snippets/ho_prototype_pollution_01.js",
+      "language": "javascript",
+      "expected_findings": [
+        {"line_range": [1, 9], "category": "prototype_pollution", "severity": "high"}
+      ],
+      "note": "for..in on untrusted source can set __proto__ — subtle JS vulnerability"
+    },
+    {
+      "id": "ho_go_error_ignored_01",
+      "file": "snippets/ho_go_error_ignored_01.go",
+      "language": "go",
+      "expected_findings": [
+        {"line_range": [10, 10], "category": "error_handling", "severity": "medium"},
+        {"line_range": [16, 16], "category": "error_handling", "severity": "medium"}
+      ],
+      "note": "Go _ pattern silently ignoring errors — tests a new language"
+    },
+    {
+      "id": "ho_clean_correct_01",
+      "file": "snippets/ho_clean_correct_01.py",
+      "language": "python",
+      "expected_findings": [],
+      "note": "Deliberately safe code: parameterized query, env var for path, context managers. Should find NOTHING."
+    }
+  ]
+}
+

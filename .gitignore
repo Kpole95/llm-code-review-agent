@@ -1,0 +1,62 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+.Python
+build/
+dist/
+wheels/
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Generated: RAG vector index
+chroma_db/
+
+# Generated: MLflow / experiment tracking
+mlruns/
+mlflow.db
+mlartifacts/
+
+# Generated: evaluation outputs
+src/eval/eval_results.json
+src/eval/holdout/holdout_results.json
+
+# Testing / linting caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# HuggingFace model cache
+.cache/
+
+# Personal study notes (keep local, do NOT push)
+week*notes.md
+week*summary.md
+WEEK*_NOTES.md
+WEEK*_SUMMARY.md
+PROJECT_OVERVIEW.md
+project_overview.md
+COMPLETE_GUIDE.md
+complete_guide.md

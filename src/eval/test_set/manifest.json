@@ -1,0 +1,162 @@
+{
+  "snippets": [
+    {
+      "id": "sql_injection_01",
+      "file": "snippets/sql_injection_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [7, 7], "category": "sql_injection", "severity": "high"}
+      ]
+    },
+    {
+      "id": "command_injection_01",
+      "file": "snippets/command_injection_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [6, 6], "category": "command_injection", "severity": "high"}
+      ]
+    },
+    {
+      "id": "hardcoded_secret_01",
+      "file": "snippets/hardcoded_secret_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [1, 1], "category": "hardcoded_secret", "severity": "high"}
+      ]
+    },
+    {
+      "id": "bare_except_01",
+      "file": "snippets/bare_except_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [4, 4], "category": "bare_except", "severity": "medium"},
+        {"line_range": [5, 6], "category": "undefined_variable", "severity": "medium"}
+      ]
+    },
+    {
+      "id": "eval_usage_01",
+      "file": "snippets/eval_usage_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [3, 3], "category": "eval", "severity": "high"}
+      ]
+    },
+    {
+      "id": "path_traversal_01",
+      "file": "snippets/path_traversal_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [3, 3], "category": "path_traversal", "severity": "high"}
+      ]
+    },
+    {
+      "id": "weak_crypto_01",
+      "file": "snippets/weak_crypto_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [6, 6], "category": "crypto", "severity": "medium"}
+      ]
+    },
+    {
+      "id": "insecure_deser_01",
+      "file": "snippets/insecure_deser_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [6, 6], "category": "deserialization", "severity": "high"}
+      ]
+    },
+    {
+      "id": "mutable_default_01",
+      "file": "snippets/mutable_default_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [1, 1], "category": "mutable_default", "severity": "medium"}
+      ]
+    },
+    {
+      "id": "multi_bug_01",
+      "file": "snippets/multi_bug_01.py",
+      "language": "python",
+      "expected_findings": [
+        {"line_range": [3, 3], "category": "hardcoded_secret", "severity": "high"},
+        {"line_range": [7, 9], "category": "sql_injection", "severity": "high"},
+        {"line_range": [6, 7], "category": "resource_leak", "severity": "medium"}
+      ]
+    },
+    {
+      "id": "clean_01",
+      "file": "snippets/clean_01.py",
+      "language": "python",
+      "expected_findings": []
+    },
+    {
+      "id": "clean_safe_sql_01",
+      "file": "snippets/clean_safe_sql_01.py",
+      "language": "python",
+      "expected_findings": []
+    },
+    {
+      "id": "clean_safe_secret_01",
+      "file": "snippets/clean_safe_secret_01.py",
+      "language": "python",
+      "expected_findings": []
+    },
+    {
+      "id": "xss_01",
+      "file": "snippets/xss_01.js",
+      "language": "javascript",
+      "expected_findings": [
+        {"line_range": [3, 3], "category": "xss", "severity": "high"}
+      ]
+    },
+    {
+      "id": "js_eval_01",
+      "file": "snippets/js_eval_01.js",
+      "language": "javascript",
+      "expected_findings": [
+        {"line_range": [2, 2], "category": "eval", "severity": "high"}
+      ]
+    },
+    {
+      "id": "js_hardcoded_secret_01",
+      "file": "snippets/js_hardcoded_secret_01.js",
+      "language": "javascript",
+      "expected_findings": [
+        {"line_range": [1, 1], "category": "hardcoded_secret", "severity": "high"}
+      ]
+    },
+    {
+      "id": "js_async_01",
+      "file": "snippets/js_async_01.js",
+      "language": "javascript",
+      "expected_findings": [
+        {"line_range": [1, 4], "category": "error_handling", "severity": "low"},
+        {"line_range": [2, 2], "category": "error_handling", "severity": "low"},
+        {"line_range": [4, 4], "category": "null_dereference", "severity": "medium"}
+      ]
+    },
+    {
+      "id": "js_loose_equality_01",
+      "file": "snippets/js_loose_equality_01.js",
+      "language": "javascript",
+      "expected_findings": [
+        {"line_range": [2, 2], "category": "loose_equality", "severity": "low"}
+      ]
+    },
+    {
+      "id": "js_clean_01",
+      "file": "snippets/js_clean_01.js",
+      "language": "javascript",
+      "expected_findings": []
+    },
+    {
+      "id": "js_multi_bug_01",
+      "file": "snippets/js_multi_bug_01.js",
+      "language": "javascript",
+      "expected_findings": [
+        {"line_range": [1, 1], "category": "hardcoded_secret", "severity": "high"},
+        {"line_range": [4, 4], "category": "xss", "severity": "high"}
+      ]
+    }
+  ]
+}
