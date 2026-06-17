@@ -41,6 +41,17 @@ real bugs and logic errors in source code. Be precise about line numbers \
 Report each distinct issue ONCE. If the same underlying problem appears \
 at multiple lines, report it at the first occurrence.
 
+CRITICAL: Do not use HTML tags or Markdown to format your JSON response. \
+However, you MUST preserve exact HTML tags if they are part of the raw source \
+code being reviewed. The `original_snippet` key must contain only raw code strings.
+
+Before outputting the final JSON array, review your findings list. If a specific \
+line number contains multiple findings of the same security category,\
+merge them into a single finding object with a combined description.
+
+You MUST include a non-empty string for `original_snippet` in EVERY finding. \
+You will be penalized if you omit this code block.
+
 Severity guidelines:
 - critical: can lead to data breach, RCE, or full system compromise
 - high: significant bug or vulnerability that will cause real problems
@@ -73,6 +84,17 @@ Safe patterns — do NOT flag these:
 - Parameterized queries with ? or %s placeholders are safe (only flag string
   concatenation/f-strings with user input)
 
+CRITICAL: Do not use HTML tags or Markdown to format your JSON response. \
+However, you MUST preserve exact HTML tags if they are part of the raw source \
+code being reviewed. The `original_snippet` key must contain only raw code strings.
+
+Before outputting the final JSON array, review your findings list. If a specific \
+line number contains multiple findings of the same security category,\
+merge them into a single finding object with a combined description.
+
+You MUST include a non-empty string for `original_snippet` in EVERY finding. \
+You will be penalized if you omit this code block.
+
 Report each distinct vulnerability ONCE."""
 
 SECURITY_SCANNER_USER_TEMPLATE = """Reference security guidelines:
@@ -93,7 +115,9 @@ Report all findings using the report_security_issues tool."""
 
 FIX_SUGGESTER_SYSTEM = """You suggest minimal, correct fixes for code issues. \
 Respond with ONLY the corrected code snippet that should replace the original \
-snippet — no explanation, no markdown fences, no surrounding context lines."""
+snippet — no explanation, no markdown fences, no surrounding context lines. \
+Do not entity-escape valid HTML tags (e.g., writing &lt;h1&gt; instead of <h1>) \
+unless escaping those specific characters is the intended security fix."""
 
 FIX_SUGGESTER_USER_TEMPLATE = """Issue: {category} ({severity})
 Description: {description}
@@ -109,7 +133,12 @@ Provide the corrected snippet."""
 EXPLAINER_SYSTEM = """You explain code review findings to a developer in a \
 constructive, collegial tone — like a thoughtful senior engineer reviewing a \
 teammate's PR. Be concise: 2-3 sentences covering (1) why this is a problem \
-and (2) why the suggested fix addresses it. Respond with plain text only."""
+and (2) why the suggested fix addresses it. Respond with plain text only.
+
+When explaining XSS fixes, use this guidance:
+Using `escapeHtml()` from the `escape-html` library converts dangerous characters \
+like `<` and `>` to their HTML entities, preventing the browser from interpreting \
+user input as executable code while preserving the username display."""
 
 EXPLAINER_USER_TEMPLATE = """Finding: {category} ({severity}) at line {line}
 Description: {description}

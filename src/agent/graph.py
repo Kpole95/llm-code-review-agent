@@ -1,4 +1,7 @@
 """LangGraph pipeline: analyze -> detect -> enrich."""
+import re
+from concurrent.futures import ThreadPoolExecutor
+
 import numpy as np
 from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
 from langgraph.graph import END, StateGraph
@@ -14,6 +17,51 @@ from src.tools.security_scanner import scan_security
 _embed_fn = SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
 _SEVERITY_RANK = {"low": 0, "medium": 1, "high": 2, "critical": 3}
 
+# Run enrichment for findings concurrently. Each worker does fix + explanation
+# for one finding; this caps simultaneous API calls to avoid rate limits.
+_ENRICH_WORKERS = 5
+
+
+# --- UI-leak scrubbing ------------------------------------------------------
+# The model occasionally bleeds the Streamlit card template into a snippet
+# (e.g. </div><div class="code-label">SUGGESTED FIX</div>...). We strip ONLY
+# that leaked template, never generic angle brackets — legitimate code like
+# List<String> and real XSS snippets (<h1>, <img>) must survive untouched.
+_TEMPLATE_BOUNDARY_RE = re.compile(
+    r'</div>\s*<div[^>]*class\s*=\s*"(?:code-|finding-)', re.IGNORECASE
+)
+_UI_CLASS_TAG_RE = re.compile(
+    r'</?(?:div|span)[^>]*class\s*=\s*"[^"]*\b'
+    r'(?:code-label|code-block|code-fix|code-original|finding-card|finding-header|'
+    r'finding-desc|finding-location|finding-category|severity-badge|explanation|file-rule)'
+    r'\b[^"]*"[^>]*>',
+    re.IGNORECASE,
+)
+_ORPHAN_CLOSER_RE = re.compile(r'</(?:div|span)>', re.IGNORECASE)
+
+
+def _scrub_ui_leak(text: str) -> str:
+    """Brutally amputate any leaked Streamlit UI templates from the LLM's output."""
+    if not text:
+        return text
+    
+    # 1. The Nuclear Option: If it tries to start a new UI section, chop it off.
+    cutoff_phrases = [
+        '</div><div class="code-label">',
+        '</div>\n<div class="code-label">',
+        '<div class="code-label">SUGGESTED FIX',
+    ]
+    
+    for phrase in cutoff_phrases:
+        if phrase in text:
+            # Keep only everything BEFORE the leaked HTML
+            text = text.split(phrase)[0]
+
+    # 2. Clean up any trailing orphaned tags that got left behind
+    text = text.replace('</div>', '').replace('</span>', '')
+    
+    return text.strip()
+
 
 def _cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     denom = np.linalg.norm(a) * np.linalg.norm(b)
@@ -24,9 +72,9 @@ def _cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
 
 def deduplicate_findings(findings, line_tolerance=3, similarity_threshold=0.82):
     """
-    Merge duplicate findings in two passes: an exact match on
-    (file, line, category), then a semantic pass on description similarity
-    for near-duplicates the exact pass misses.
+    Merge duplicates in two passes: an exact match on (file, line, category),
+    then a semantic pass that embeds 'category + description' so near-duplicates
+    from the regex and LLM detectors (different lines, same issue) collapse.
     """
     if not findings:
         return []
@@ -48,11 +96,15 @@ def deduplicate_findings(findings, line_tolerance=3, similarity_threshold=0.82):
     if len(pre_deduped) == 1:
         return pre_deduped
 
-    descriptions = [f.description for f in pre_deduped]
-    embeddings = np.array(_embed_fn(descriptions))
+    # Composite key: category anchors same-type findings together, description
+    # separates genuinely different issues. Embedded once, outside the loops.
+    composite = [f"{f.category} {f.description}" for f in pre_deduped]
+    embeddings = np.array(_embed_fn(composite))
 
     merged = set()
     kept = []
+    # ... inside deduplicate_findings ...
+    
     for i, f in enumerate(pre_deduped):
         if i in merged:
             continue
@@ -64,10 +116,21 @@ def deduplicate_findings(findings, line_tolerance=3, similarity_threshold=0.82):
                 continue
             if abs(f.line - g.line) > line_tolerance:
                 continue
-            sim = _cosine_similarity(embeddings[i], embeddings[j])
-            if sim > similarity_threshold:
+            
+            # --- THE FIX: Aggressive Category Short-Circuit ---
+            # If the OWASP category is identical and it's within the line tolerance (3 lines),
+            # it is 100% the LLM double-reporting. Merge it instantly.
+            if f.category == g.category:
                 merged.add(j)
                 group.append(g)
+                continue
+
+            # Fallback: Semantic check ONLY for mismatched categories (e.g. 'error_handling' vs 'null_dereference')
+            sim = _cosine_similarity(embeddings[i], embeddings[j])
+            if sim > 0.72: # Lowered from 0.82 to be more forgiving
+                merged.add(j)
+                group.append(g)
+                
         best = max(group, key=lambda x: _SEVERITY_RANK.get(x.severity, 0))
         kept.append(best)
 
@@ -97,22 +160,36 @@ def detect_node(state: AgentState) -> AgentState:
     return state
 
 
+def _enrich_one(raw: dict) -> dict:
+    """Fully enrich one finding: context -> fix -> explanation, then scrub leaks."""
+    finding = BugFinding(**raw)
+
+    if not finding.context_docs:
+        finding.context_docs = get_context_for_finding(finding)
+
+    if finding.original_snippet:
+        finding.suggested_fix = suggest_fix(finding)
+        finding.explanation = explain_finding(finding)
+
+    finding.original_snippet = _scrub_ui_leak(finding.original_snippet)
+    finding.suggested_fix = _scrub_ui_leak(finding.suggested_fix)
+    finding.explanation = _scrub_ui_leak(finding.explanation)
+
+    return finding.model_dump()
+
+
 def enrich_node(state: AgentState) -> AgentState:
-    """For each finding: attach context, then a fix, then an explanation (in order)."""
-    enriched = []
-    for raw in state["findings"]:
-        finding = BugFinding(**raw)
+    """Enrich all findings in parallel (independent per finding)."""
+    raws = state["findings"]
+    if not raws:
+        state["findings"] = []
+        return state
 
-        if not finding.context_docs:
-            finding.context_docs = get_context_for_finding(finding)
+    workers = min(_ENRICH_WORKERS, len(raws))
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        # .map preserves input order, so findings stay in their original order.
+        state["findings"] = list(executor.map(_enrich_one, raws))
 
-        if finding.original_snippet:
-            finding.suggested_fix = suggest_fix(finding)
-            finding.explanation = explain_finding(finding)
-
-        enriched.append(finding.model_dump())
-
-    state["findings"] = enriched
     return state
 
 

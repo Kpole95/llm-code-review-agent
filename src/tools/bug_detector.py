@@ -36,10 +36,10 @@ _BUG_DETECTOR_TOOL = {
                         },
                         "original_snippet": {
                             "type": "string",
-                            "description": "The exact problematic line(s)",
+                            "description": "The exact problematic line(s), raw code only",
                         },
                     },
-                    "required": ["line", "severity", "category", "description"],
+                    "required": ["line", "severity", "category", "description", "original_snippet"],
                 },
             }
         },

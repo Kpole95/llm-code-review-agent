@@ -38,7 +38,7 @@ _SEVERITY_STYLE = {
 }
 _SEVERITY_ORDER = ["critical", "high", "medium", "low"]
 
-st.set_page_config(page_title="LLM Code Review Agent", page_icon="🔍", layout="wide")
+st.set_page_config(page_title="LLM Code Review Agent", page_icon="🔍", layout="wide",initial_sidebar_state="expanded")
 
 st.markdown(
     """
@@ -48,7 +48,7 @@ st.markdown(
 html, body, [class*="css"]  { font-family: 'Inter', sans-serif; }
 .stApp { background-color: #0E1116; color: #ECEFF4; }
 h1, h2, h3 { font-family: 'Space Grotesk', sans-serif !important; letter-spacing: -0.01em; }
-#MainMenu, footer, header { visibility: hidden; }
+#MainMenu, footer { visibility: hidden; }
 
 .hero-title { font-family: 'Space Grotesk', sans-serif; font-size: 2.05rem; font-weight: 700; margin-bottom: 0.1rem; }
 .hero-sub { color: #8D95A3; font-size: 0.95rem; margin-bottom: 1.6rem; }
@@ -230,15 +230,16 @@ else:
                 f"</div>"
                 f'<div class="finding-desc">{html.escape(f["description"])}</div>'
             )
-            if f.get("original_snippet"):
-                card += (
-                    '<div class="code-label">ORIGINAL</div>'
-                    f'<div class="code-block code-original">{html.escape(f["original_snippet"])}</div>'
-                )
+            snippet = f.get("original_snippet") or "// Code snippet unavailable — check the file directly."
+            card += (
+                '<div class="code-label">ORIGINAL</div>'
+                f'<div class="code-block code-original">{html.escape(snippet)}</div>'
+            )
             if f.get("suggested_fix"):
+                fix = f["suggested_fix"] or "// Fix unavailable — check the file directly."
                 card += (
                     '<div class="code-label">SUGGESTED FIX</div>'
-                    f'<div class="code-block code-fix">{html.escape(f["suggested_fix"])}</div>'
+                    f'<div class="code-block code-fix">{html.escape(fix)}</div>'
                 )
             if f.get("explanation"):
                 card += f'<div class="explanation">{html.escape(f["explanation"])}</div>'
