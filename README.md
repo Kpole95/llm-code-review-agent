@@ -5,6 +5,7 @@
 **An AI agent that reviews code for bugs and security vulnerabilities — across five languages — with suggested fixes and plain-English explanations.**
 
 [![CI](https://github.com/Kpole95/llm-code-review-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Kpole95/llm-code-review-agent/actions/workflows/ci.yml)
+[![Deploy](https://github.com/Kpole95/llm-code-review-agent/actions/workflows/deploy.yml/badge.svg)](https://github.com/Kpole95/llm-code-review-agent/actions/workflows/deploy.yml)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -115,6 +116,14 @@ Because the model is non-deterministic, results are reported as a **range across
 
 The evaluation harness separates a **tuning set** (used while iterating, and therefore optimistically biased) from this hold-out set, and logs every run to MLflow with parameters and metrics for a queryable history.
 
+### Experiment tracking
+
+Every evaluation run is logged to **MLflow** (hosted on **DagsHub**) with its parameters (prompt version, model, RAG `k`) and metrics (precision, recall, F1, plus per-snippet breakdowns). This gives a queryable history for comparing prompt versions and catching regressions over time.
+
+![MLflow experiment tracking on DagsHub](docs/images/mlflow-tracking.png)
+
+> Note: the runs shown here are logged against the *tuning* set used during iteration, so their scores run higher than the honest hold-out range above. The screenshot illustrates the tracking workflow and methodology, not the headline accuracy figure.
+
 ---
 
 ## Tech stack
@@ -128,7 +137,7 @@ The evaluation harness separates a **tuning set** (used while iterating, and the
 | Retrieval (RAG) | ChromaDB + `all-MiniLM-L6-v2` |
 | Interfaces | FastAPI, Streamlit, `rich` CLI |
 | Observability | LangSmith (tracing), MLflow on DagsHub (experiments) |
-| Infra | Docker, GitHub Actions (CI/CD), AWS ECR + ECS |
+| Infra | Docker, GitHub Actions (CI/CD), AWS ECR + ECS Fargate |
 
 ---
 
@@ -215,6 +224,16 @@ docs/               # architecture, complete guide, results history
 Deployments use a dedicated, scope-limited IAM user whose credentials live in GitHub Actions secrets, separate from any personal keys.
 
 ![GitHub Actions](docs/images/github-actions.png)
+
+---
+
+## Deployment
+
+The application is containerized and deployed on **AWS ECS (Fargate)** — a single task running two containers (the FastAPI API and the Streamlit UI) from an image stored in **Amazon ECR**. The CD pipeline builds and ships a new image on every push to `main`.
+
+![Deployed on AWS ECS](docs/images/aws-deployed.png)
+
+> The service is scaled to zero when idle to avoid running costs, so there is no always-on public URL; the screenshot above shows it running live during a demo. It can be spun up on demand by scaling the ECS service to one task.
 
 ---
 
