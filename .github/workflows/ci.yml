@@ -21,9 +21,23 @@ jobs:
         run: uv python install 3.11
       - name: Install dependencies
         run: uv sync
+
+      - name: Cache HuggingFace models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-all-MiniLM-L6-v2
+
       - name: Lint with ruff
         run: uv run ruff check src tests
-      - name: Build RAG index
-        run: uv run python -m src.rag.build_index
+
+      - name: Build RAG index (with retry)
+        run: |
+          for i in 1 2 3; do
+            uv run python -m src.rag.build_index && break
+            echo "Attempt $i failed, retrying in 15s..."
+            sleep 15
+          done
+
       - name: Run tests
         run: uv run pytest -v
