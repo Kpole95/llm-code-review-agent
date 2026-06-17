@@ -1,4 +1,5 @@
 """LangGraph pipeline: analyze -> detect -> enrich."""
+import html
 import re
 from concurrent.futures import ThreadPoolExecutor
 
@@ -171,9 +172,18 @@ def _enrich_one(raw: dict) -> dict:
         finding.suggested_fix = suggest_fix(finding)
         finding.explanation = explain_finding(finding)
 
+    # 1. Scrub the Streamlit UI leaks
     finding.original_snippet = _scrub_ui_leak(finding.original_snippet)
     finding.suggested_fix = _scrub_ui_leak(finding.suggested_fix)
     finding.explanation = _scrub_ui_leak(finding.explanation)
+
+    # 2. Revert the LLM's defensive HTML entities (&lt;h1&gt;) back into raw code (<h1>)
+    if finding.original_snippet:
+        finding.original_snippet = html.unescape(finding.original_snippet)
+    if finding.suggested_fix:
+        finding.suggested_fix = html.unescape(finding.suggested_fix)
+    if finding.explanation:
+        finding.explanation = html.unescape(finding.explanation)
 
     return finding.model_dump()
 
