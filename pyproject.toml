@@ -1,6 +1,10 @@
 [project]
 name = "llm-code-review-agent"
 version = "0.1.0"
+description = "AI agent that reviews code for bugs and security vulnerabilities across 5 languages, with RAG-grounded findings, suggested fixes, and plain-English explanations."
+authors = [
+    { name = "Murali Krishna Pole", email = "krishnapole90@outlook.com" }
+]
 requires-python = ">=3.11"
 dependencies = [
     "anthropic>=0.109.1",
@@ -28,6 +32,14 @@ dependencies = [
     "tree-sitter-typescript>=0.23.2",
     "uvicorn[standard]>=0.49.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/Kpole95/llm-code-review-agent"
+Repository = "https://github.com/Kpole95/llm-code-review-agent"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
