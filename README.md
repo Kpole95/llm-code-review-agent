@@ -96,7 +96,7 @@ flowchart LR
 - **detect** runs both detectors on every file, then deduplicates the combined findings — an exact pass on `(file, line, category)` followed by a semantic pass on `category + description` embeddings.
 - **enrich** attaches knowledge-base context, generates a fix and an explanation per finding (in parallel across findings), and scrubs any stray HTML before returning.
 
-A deeper write-up — the data contract, the two-detector rationale, and how the design evolved — lives in [`docs/architecture.md`](docs/architecture.md).
+A deeper write-up of the full system lives in the `docs/` folder: [`architecture.md`](docs/architecture.md) — components, data flow, and how the design evolved · [`design.md`](docs/design.md) — the reasoning behind key decisions · [`PRD.md`](docs/PRD.md) — why this was built and what it has to do · [`Phases.md`](docs/Phases.md) — how it got built, phase by phase · [`rules.md`](docs/rules.md) — the decisions that are locked in and why
 
 ---
 
@@ -211,7 +211,7 @@ streamlit_app/      # Streamlit web UI
 knowledge_base/     # OWASP + best-practice docs (RAG source — required)
 docker/             # Dockerfile
 .github/workflows/  # CI (lint + test) and CD (build + deploy)
-docs/               # architecture, complete guide, results history
+docs/               # architecture, design, PRD, phases, rules, results history
 ```
 
 ---
