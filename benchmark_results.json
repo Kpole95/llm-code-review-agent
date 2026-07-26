@@ -1,0 +1,290 @@
+{
+  "codellama:13b|tests\\fixtures\\clean.py": {
+    "model": "codellama:13b",
+    "file": "tests\\fixtures\\clean.py",
+    "findings": 0,
+    "elapsed": 454.7,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\clean.py...\n\n[analyze] tests\\fixtures\\clean.py: 1 function(s), 8 LOC\nNo issues found.\n"
+  },
+  "codellama:13b|tests\\fixtures\\sample_pr\\config.py": {
+    "model": "codellama:13b",
+    "file": "tests\\fixtures\\sample_pr\\config.py",
+    "findings": 0,
+    "elapsed": 300.0,
+    "error": "TIMEOUT (>300s)",
+    "output": ""
+  },
+  "codellama:13b|tests\\fixtures\\sample_pr\\db.py": {
+    "model": "codellama:13b",
+    "file": "tests\\fixtures\\sample_pr\\db.py",
+    "findings": 1,
+    "elapsed": 467.3,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\db.py...\n\n[analyze] tests\\fixtures\\sample_pr\\db.py: 1 function(s), 11 LOC\n----------------------- tests\\fixtures\\sample_pr\\db.py ------------------------\nLine 10 \u2014 CRITICAL \u2014 sql_injection\n  Possible SQL injection via string formatting. Use of f-strings with \nnon-sanitized user input in the `email` variable can lead to data breach or \nRCE.\n  - Original:\n  query = f\"SELECT * FROM users WHERE email='{email}'\"\n  + Suggested fix:\n  query = f\"SELECT * FROM users WHERE email=?\"\n\n  Dear Developer,\n\nI'm reviewing your pull request and wanted to discuss some code changes related\nto SQL injection prevention. The original code uses f-strings with \nnon-sanitized user input in the `email` variable, which could lead to a data \nbreach or RCE (remote code execution).\n\nThe suggested fix replaces the string formatting with a parameterized query \nusing `?` instead of the user input. This approach helps protect against SQL \ninjection by separating the application's data logic from the user-supplied \ndata, making it more difficult for attackers to exploit vulnerabilities.\n\nI understand that you may have concerns about this change, but I want to assure\nyou that it's a crucial security improvement that should not be overlooked. The\npotential consequences of SQL injection are severe, and it's important that we \ntake every precaution to prevent them.\n\nIf you have any questions or need further clarification on this change, please \ndon't hesitate to ask. I'm here to help and support your work. Let's keep the \ncode secure and make sure that our users are protected.\n\nBest regards,\n[Your Name]\n\n"
+  },
+  "codellama:13b|tests\\fixtures\\sample_pr\\handlers.py": {
+    "model": "codellama:13b",
+    "file": "tests\\fixtures\\sample_pr\\handlers.py",
+    "findings": 2,
+    "elapsed": 478.1,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\handlers.py...\n\n[analyze] tests\\fixtures\\sample_pr\\handlers.py: 1 function(s), 9 LOC\n-------------------- tests\\fixtures\\sample_pr\\handlers.py ---------------------\nLine 6 \u2014 MEDIUM \u2014 sql_injection\n  The function safe_parse_amount contains a bare except block that hides \nValueError on bad input and returns None silently. This can lead to security \nvulnerabilities.\n  - Original:\n  try:\n        return float(raw_value)\nexcept:\n  + Suggested fix:\n  try:\n    return float(raw_value)\nexcept ValueError:\n    raise\n\n  Hi there! I'm happy to help you understand this code review finding better. \nThe finding is regarding a potential security vulnerability in the \n`safe_parse_amount` function, which is using a bare except block that hides \nValueError on bad input and returns None silently. This can lead to security \nvulnerabilities.\n\nThe suggested fix is to replace the bare except block with an except ValueError\nblock, which will raise the error if it occurs instead of hiding it. This \nchange will ensure that any errors related to parsing user input are properly \nhandled and not allowed to go unnoticed.\n\nI hope this explanation helps clarify the issue and its suggested fix! Let me \nknow if you have any further questions or concerns.\n\nLine 12 \u2014 CRITICAL \u2014 bare_except\n  Bare except hides ValueError on bad input, returns None silently.\n  - Original:\n  try:\n        return float(raw_value)\nexcept:\n        return None\n  + Suggested fix:\n  try:\n    return float(raw_value)\nexcept ValueError:\n    return None\n\n  Bare except is problematic because it catches all exceptions and silently \nhides bugs, making error handling more difficult to debug. In this case, the \nsuggested fix of using a specific exception type (ValueError) addresses this \nissue by allowing for better error handling and debugging.\n\n"
+  },
+  "codellama:13b|tests\\fixtures\\sql_injection.py": {
+    "model": "codellama:13b",
+    "file": "tests\\fixtures\\sql_injection.py",
+    "findings": 0,
+    "elapsed": 300.0,
+    "error": "TIMEOUT (>300s)",
+    "output": ""
+  },
+  "phi4:14b|tests\\fixtures\\clean.py": {
+    "model": "phi4:14b",
+    "file": "tests\\fixtures\\clean.py",
+    "findings": 1,
+    "elapsed": 478.1,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\clean.py...\n\n[analyze] tests\\fixtures\\clean.py: 1 function(s), 8 LOC\n--------------------------- tests\\fixtures\\clean.py ---------------------------\nLine 6 \u2014 MEDIUM \u2014 exception_handling\n  The function raises a generic ValueError without providing additional context\nor logging, which could make debugging more challenging in larger applications.\n  - Original:\n  raise ValueError(\"numbers must not be empty\")\n  + Suggested fix:\n  def raise_error_if_empty(numbers):\n    if not numbers:\n        error_message = \"numbers must not be empty\"\n        # You can add logging here if needed, for example:\n        # logger.error(error_message)\n        raise ValueError(error_message)\n\n# Example usage:\ntry:\n    raise_error_if_empty([])\nexcept ValueError as e:\n    print(e)  # Output: numbers must not be empty\n\n  Raising a generic `ValueError` without additional context can obscure the \nunderlying issue, making it difficult to trace problems in larger systems where\nmany functions and modules are interacting. By using a dedicated function like \n`raise_error_if_empty`, you encapsulate the error-raising logic and provide an \nopportunity to include more descriptive error messages or even logging for \nbetter diagnostics.\n\nThe suggested fix improves clarity by allowing the addition of specific context\nor logs directly within the function, which can be crucial in identifying why \nand where the error occurred. This structured approach not only aids debugging \nbut also enhances code readability and maintainability, making it easier to \nadapt if additional handling is required later.\n\n"
+  },
+  "phi4:14b|tests\\fixtures\\sample_pr\\config.py": {
+    "model": "phi4:14b",
+    "file": "tests\\fixtures\\sample_pr\\config.py",
+    "findings": 4,
+    "elapsed": 559.7,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\config.py...\n\n[analyze] tests\\fixtures\\sample_pr\\config.py: 0 function(s), 6 LOC\n--------------------- tests\\fixtures\\sample_pr\\config.py ----------------------\nLine 3 \u2014 HIGH \u2014 A05: Security misconfiguration\n  Hardcoded API credential committed to source control, posing a risk if the \nrepository is public or compromised.\n  - Original:\n  STRIPE_SECRET_KEY = \"sk_live_51Hcd9fFAKEKEYFORTESTING0000000\"\n  + Suggested fix:\n  import os\n\nSTRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', 'default_value')\n\n  Hardcoding sensitive credentials like an API key directly in your source code\nis problematic because if this repository becomes public or compromised, \nunauthorized users could access and misuse these credentials, potentially \nleading to significant security breaches. By using `os.getenv()`, you're \nfetching the credential from environment variables instead of hardcoding it, \nwhich enhances security by keeping sensitive information out of version control\nand allows for different keys to be used in various environments without code \nchanges.\n\nLine 4 \u2014 CRITICAL \u2014 security\n  Hardcoded API credential committed to source. This exposes the \nSTRIPE_SECRET_KEY, which can lead to unauthorized access and potential data \nbreaches.\n  - Original:\n  STRIPE_SECRET_KEY = \"sk_live_51Hcd9fFAKEKEYFORTESTING0000000\"\n  + Suggested fix:\n  import os\n\nSTRIPE_SECRET_KEY = os.getenv(\"STRIPE_SECRET_KEY\")\nif not STRIPE_SECRET_KEY:\n    raise EnvironmentError(\"Missing Stripe secret key in environment \nvariables.\")\n\n  Committing hardcoded API credentials like `STRIPE_SECRET_KEY` directly into \nyour source code poses a critical security risk by potentially exposing \nsensitive information to unauthorized parties if the code is publicly \naccessible or shared inadvertently. This can lead to significant issues such as\nunauthorized access and data breaches.\n\nThe suggested fix retrieves the secret key from environment variables using \n`os.getenv(\"STRIPE_SECRET_K"
+  },
+  "phi4:14b|tests\\fixtures\\sample_pr\\db.py": {
+    "model": "phi4:14b",
+    "file": "tests\\fixtures\\sample_pr\\db.py",
+    "findings": 1,
+    "elapsed": 244.5,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\db.py...\n\n[analyze] tests\\fixtures\\sample_pr\\db.py: 1 function(s), 11 LOC\n----------------------- tests\\fixtures\\sample_pr\\db.py ------------------------\nLine 8 \u2014 CRITICAL \u2014 sql_injection\n  SQL query is constructed using string formatting, which makes it vulnerable \nto SQL injection attacks.\n  - Original:\n  query = f\"SELECT * FROM users WHERE email='{email}'\"\n  + Suggested fix:\n  import sqlite3\n\ndef get_user_by_email(db_connection, email):\n    cursor = db_connection.cursor()\n    query = \"SELECT * FROM users WHERE email=?\"\n    cursor.execute(query, (email,))\n    return cursor.fetchall()\n\n  The current approach to constructing SQL queries using string formatting is \nsusceptible to SQL injection attacks because it directly incorporates \nunvalidated user input into the query. This can allow malicious users to \nexecute arbitrary SQL commands, compromising database integrity and security. \nBy switching to parameterized queries, as shown in your suggested fix, we \nseparate the SQL logic from the data, ensuring that any user input is treated \nstrictly as data rather than executable code. This approach effectively \nmitigates the risk of injection by using placeholders (`?`) for dynamic values \nand letting the database driver handle their safe inclusion into the query.\n\n"
+  },
+  "phi4:14b|tests\\fixtures\\sample_pr\\handlers.py": {
+    "model": "phi4:14b",
+    "file": "tests\\fixtures\\sample_pr\\handlers.py",
+    "findings": 2,
+    "elapsed": 367.2,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\handlers.py...\n\n[analyze] tests\\fixtures\\sample_pr\\handlers.py: 1 function(s), 9 LOC\n-------------------- tests\\fixtures\\sample_pr\\handlers.py ---------------------\nLine 5 \u2014 MEDIUM \u2014 error_handling\n  Bare except clause used in try-except block; it should catch specific \nexceptions like ValueError to avoid masking other unexpected errors.\n  - Original:\n  try:\n        return float(raw_value)\n    except:\n        return None\n  + Suggested fix:\n  try:\n    return float(raw_value)\nexcept ValueError:\n    return None\n\n  Using a bare except clause catches all exceptions, which can inadvertently \nsuppress important errors like `KeyboardInterrupt`, making debugging more \ndifficult by hiding unexpected issues in your codebase. By catching specific \nexceptions like `ValueError` instead, you ensure that only anticipated and \nmanageable errors are handled this way, allowing other unexpected exceptions to\nsurface where they can be logged or addressed appropriately. This approach \nmaintains robust error handling while preventing the masking of potential bugs,\nas suggested in the reference context on exception management.\n\nLine 6 \u2014 MEDIUM \u2014 security_misconfiguration\n  Bare except clause hides all exceptions including ValueError on bad input and\nreturns None silently, which can be a security misconfiguration.\n  - Original:\n  except:\n  + Suggested fix:\n  except Exception as e:\n    # Handle specific exception or log it appropriately\n    print(f\"An error occurred: {e}\")\n\n  The use of a bare `except:` clause is problematic because it catches all \nexceptions indiscriminately and returns `None` silently, potentially masking \nspecific issues such as `ValueError`. This can hide important security \nmisconfigurations or bugs that need attention. The suggested fix, using `except\nException as e:`, allows for logging the error with a descriptive message. This\napproach not only aids in debugging by providing visibility into what went \nwrong but also en"
+  },
+  "phi4:14b|tests\\fixtures\\sql_injection.py": {
+    "model": "phi4:14b",
+    "file": "tests\\fixtures\\sql_injection.py",
+    "findings": 2,
+    "elapsed": 544.6,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sql_injection.py...\n\n[analyze] tests\\fixtures\\sql_injection.py: 2 function(s), 19 LOC\n----------------------- tests\\fixtures\\sql_injection.py -----------------------\nLine 9 \u2014 CRITICAL \u2014 sql_injection\n  SQL injection vulnerability due to direct concatenation of user_id into the \nquery string without validation or parameterization.\n  - Original:\n  \"\"\"\nDeliberately vulnerable file \u2014 used to test bug_detector.\nimport sqlite3\n\ndef get_user(user_id):\n    conn = sqlite3.connect(\"app.db\")\n    cur = conn.cursor()\n    # BUG: SQL injection \u2014 user_id is concatenated directly into the query.\n    query = \"SELECT * FROM users WHERE id=\" + user_id\n    cur.execute(query)\n    return cur.fetchone()\n  + Suggested fix:\n  import sqlite3\n\ndef get_user(user_id):\n    conn = sqlite3.connect(\"app.db\")\n    cur = conn.cursor()\n    query = \"SELECT * FROM users WHERE id=?\"\n    cur.execute(query, (user_id,))\n    return cur.fetchone()\n\n  The current approach poses a critical security risk by directly incorporating\n`user_id` into the SQL query without any form of validation or \nparameterization. This vulnerability allows attackers to execute arbitrary SQL \ncode, potentially compromising your database and exposing sensitive data. By \nusing parameterized queries as suggested, you ensure that `user_id` is treated \nstrictly as data rather than executable code, effectively mitigating the risk \nof SQL injection attacks while maintaining query functionality.\n\nLine 16 \u2014 HIGH \u2014 exception_handling\n  Bare except clause that swallows all exceptions, including ZeroDivisionError,\nwithout any handling or logging.\n  - Original:\n  \"\"\"\nDeliberately vulnerable file \u2014 used to test bug_detector.\nimport sqlite3\n\ndef get_user(user_id):\n    conn = sqlite3.connect(\"app.db\")\n    cur = conn.cursor()\n    # BUG: SQL injection \u2014 user_id is concatenated directly into the query.\n    query = \"SELECT * FROM users WHERE id=\" + user_id\n    cur.execute(query)\n    return cur.fetchone()\n\ndef safe_div"
+  },
+  "deepseek-coder-v2:16b|tests\\fixtures\\clean.py": {
+    "model": "deepseek-coder-v2:16b",
+    "file": "tests\\fixtures\\clean.py",
+    "findings": 2,
+    "elapsed": 310.2,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\clean.py...\n\n[analyze] tests\\fixtures\\clean.py: 1 function(s), 8 LOC\n--------------------------- tests\\fixtures\\clean.py ---------------------------\nLine 1 \u2014 LOW \u2014 sql_injection\n  Untrusted input is being processed without proper sanitization or \nparameterization, which could lead to SQL injection vulnerabilities.\n  - Original:\n  \"\"\"\n  + Suggested fix:\n  query = \"SELECT * FROM users WHERE username = '%s' AND password = '%s'\" % \n(username, password)\n\n  The original code snippet concatenates untrusted input (`username` and \n`password`) directly into an SQL query without using parameterization or \nsanitization. This approach is vulnerable to SQL injection, where an attacker \ncan manipulate the query by injecting malicious SQL commands. The suggested fix\ninvolves using parameterized queries, which separate user inputs from the \nactual SQL command, thus preventing this vulnerability. This method ensures \nthat the database engine parses and executes the query independently of any \nexternal input, effectively mitigating the risk of SQL injection attacks.\n\nLine 4 \u2014 LOW \u2014 logic_error\n  The function does not handle the case where the list is empty correctly.\n  - Original:\n  if not numbers:\n        raise ValueError(\"numbers must not be empty\")\n  + Suggested fix:\n  if not numbers:\n    raise ValueError(\"numbers must not be empty\")\n\n  The original code has a logic error where it does not correctly handle the \ncase when the list `numbers` is empty. Specifically, it raises a `ValueError` \nwith the message \"numbers must not be empty\", which might lead to confusion or \nunexpected errors if this function is expected to operate on potentially empty \nlists.\n\nThe suggested fix addresses this by maintaining the same logic but ensuring \nthat the condition for checking an empty list (`if not numbers:`) remains \nconsistent and correct, thus preventing any potential issues related to \nhandling empty lists.\n\n"
+  },
+  "deepseek-coder-v2:16b|tests\\fixtures\\sample_pr\\config.py": {
+    "model": "deepseek-coder-v2:16b",
+    "file": "tests\\fixtures\\sample_pr\\config.py",
+    "findings": 3,
+    "elapsed": 231.0,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\config.py...\n\n[analyze] tests\\fixtures\\sample_pr\\config.py: 0 function(s), 6 LOC\n--------------------- tests\\fixtures\\sample_pr\\config.py ----------------------\nLine 3 \u2014 CRITICAL \u2014 hardcoded_credentials\n  Hardcoded API credential detected.\n  - Original:\n  STRIPE_SECRET_KEY = \"sk_live_51Hcd9fFAKEKEYFORTESTING0000000\"\n  + Suggested fix:\n  STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')\n\n  The hardcoded credentials in your code pose a significant security risk as \nthey can be easily accessed and used by unauthorized individuals. By using \n`os.getenv('STRIPE_SECRET_KEY')`, you ensure that sensitive information is not \nexposed directly in your source code, reducing the likelihood of it being \ncompromised. This approach aligns with best practices for securing API keys and\nother credentials to prevent potential security breaches.\n\nLine 4 \u2014 HIGH \u2014 hardcoded_secret\n  Line matches a pattern for a hardcoded credential or secret.\n  - Original:\n  STRIPE_SECRET_KEY = \"sk_live_51Hcd9fFAKEKEYFORTESTING0000000\"\n  + Suggested fix:\n  STRIPE_SECRET_KEY = \"your_actual_stripe_secret_key_here\"\n\n  The issue is that `STRIPE_SECRET_KEY` contains a hardcoded Stripe secret key \nwhich can be exposed if this code is ever committed to a public repository or \nshared with unauthorized individuals. This poses a security risk as it allows \nanyone who gains access to the codebase to use the API key for testing \npurposes, potentially leading to unnecessary charges on your Stripe account. \nThe suggested fix involves updating the hardcoded value to retrieve the secret \nfrom an environment variable using `process.env`, which is a secure method for \nmanaging sensitive information. This approach ensures that the actual secret is\nnot exposed in the source code and can be securely managed outside of the \napplication environment, adhering to best practices for securing API keys and \nsecrets.\n\n"
+  },
+  "deepseek-coder-v2:16b|tests\\fixtures\\sample_pr\\db.py": {
+    "model": "deepseek-coder-v2:16b",
+    "file": "tests\\fixtures\\sample_pr\\db.py",
+    "findings": 1,
+    "elapsed": 157.5,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\db.py...\n\n[analyze] tests\\fixtures\\sample_pr\\db.py: 1 function(s), 11 LOC\n----------------------- tests\\fixtures\\sample_pr\\db.py ------------------------\nLine 7 \u2014 CRITICAL \u2014 sql_injection\n  SQL injection via string formatting can lead to data breach.\n  - Original:\n  query = f\"SELECT * FROM users WHERE email='{email}'\"\n  + Suggested fix:\n  query = \"SELECT * FROM users WHERE email=%s\" % (email,)\n\n  The original code uses string formatting with user input directly in an SQL \nquery, which is vulnerable to SQL injection. This problem occurs because the \nuser input (`email`) is concatenated into the SQL statement without proper \nparameterization.\n\nThe suggested fix uses a parameterized query, where `%s` is used as a \nplaceholder for the email value within the query string. This approach ensures \nthat the user input is treated as a parameter rather than part of the SQL \nsyntax, thus preventing SQL injection attacks.\n\n"
+  },
+  "deepseek-coder-v2:16b|tests\\fixtures\\sample_pr\\handlers.py": {
+    "model": "deepseek-coder-v2:16b",
+    "file": "tests\\fixtures\\sample_pr\\handlers.py",
+    "findings": 2,
+    "elapsed": 223.4,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\handlers.py...\n\n[analyze] tests\\fixtures\\sample_pr\\handlers.py: 1 function(s), 9 LOC\n-------------------- tests\\fixtures\\sample_pr\\handlers.py ---------------------\nLine 5 \u2014 LOW \u2014 error_handling\n  Bare except catches all exceptions including ValueError which is silently \nignored.\n  - Original:\n  try:\n    return float(raw_value)\nexcept:\n  + Suggested fix:\n  try:\n    return float(raw_value)\nexcept (ValueError, TypeError):\n    # Handle specific exceptions if necessary\n    raise ValueError(\"Invalid input\") from None\n\n  The original code snippet has a bare `except:` clause that catches all \nexceptions, including `ValueError`, without any specific handling or logging. \nThis can lead to silently ignoring important errors like `ValueError`. The \nsuggested fix addresses this by catching only specific exceptions (`ValueError`\nand `TypeError`), allowing for more precise error handling and potentially \nbetter debugging if other types of exceptions are encountered. Additionally, it\nraises a `ValueError` with a clear message, which is a good practice for \nindicating invalid input to the caller.\n\nLine 5 \u2014 LOW \u2014 sql_injection\n  Untrusted input is being directly parsed into a float without proper \nvalidation or sanitization. This can lead to injection vulnerabilities.\n  - Original:\n  return float(raw_value)\n  + Suggested fix:\n  return float(float(raw_value))\n\n  The issue is that untrusted input `raw_value` is being directly parsed as a \nfloat without any validation or sanitization, which can lead to SQL injection \nvulnerabilities. The suggested fix involves parsing the value twice using \n`float()`, which acts as a form of input validation and helps prevent potential\ninjection attacks by ensuring that the input conforms to the expected format \nfor floating-point numbers. This makes it more difficult for malicious input to\nbe interpreted as an SQL command, thus mitigating the risk of injection \nvulnerabilities.\n\n"
+  },
+  "deepseek-coder-v2:16b|tests\\fixtures\\sql_injection.py": {
+    "model": "deepseek-coder-v2:16b",
+    "file": "tests\\fixtures\\sql_injection.py",
+    "findings": 3,
+    "elapsed": 318.6,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sql_injection.py...\n\n[analyze] tests\\fixtures\\sql_injection.py: 2 function(s), 19 LOC\n----------------------- tests\\fixtures\\sql_injection.py -----------------------\nLine 7 \u2014 HIGH \u2014 injection\n  Untrusted input is concatenated directly into SQL query, leading to potential\nSQL injection vulnerability.\n  - Original:\n  query = \"SELECT * FROM users WHERE id=\" + user_id\n  + Suggested fix:\n  query = \"SELECT * FROM users WHERE id=%s\" % (user_id)\n\n  The original code is vulnerable to SQL injection because it directly \nconcatenates `user_id` from untrusted input into the SQL query. This can be \nexploited by an attacker to manipulate the query and potentially gain \nunauthorized access to the database. The suggested fix uses a parameterized \nquery (using Python's `%s` placeholder), which ensures that user input is \ntreated as a string literal, preventing it from affecting the rest of the query\nand thus mitigating the SQL injection risk.\n\nLine 8 \u2014 HIGH \u2014 sql_injection\n  SQL injection vulnerability - user_id is concatenated directly into the \nquery.\n  - Original:\n  query = \"SELECT * FROM users WHERE id=\" + user_id\n  + Suggested fix:\n  query = \"SELECT * FROM users WHERE id=%s\" % (user_id)\n\n  The original code contains a high-severity issue of SQL injection due to \ndirect concatenation of `user_id` from untrusted input into the SQL query. This\napproach exposes the application to attacks where an attacker can manipulate \nthe query by injecting malicious SQL, potentially leading to unauthorized data \naccess or manipulation.\n\nThe suggested fix involves using parameterized queries (or prepared \nstatements), which separate the user input (the `user_id`) from the actual SQL \ncommand. This method ensures that the SQL engine treats the input as a literal \nvalue rather than executable code, thus preventing SQL injection attacks. By \nemploying this technique, we mitigate the risk associated with directly \nincluding untrusted data in our SQL commands.\n\nLi"
+  },
+  "glm4:latest|tests\\fixtures\\clean.py": {
+    "model": "glm4:latest",
+    "file": "tests\\fixtures\\clean.py",
+    "findings": 1,
+    "elapsed": 258.7,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\clean.py...\n\n[analyze] tests\\fixtures\\clean.py: 1 function(s), 8 LOC\n--------------------------- tests\\fixtures\\clean.py ---------------------------\nLine 11 \u2014 HIGH \u2014 broken_access_control\n  The function `average` does not check for authorization or user permissions \nbefore allowing access to the list of numbers. Users with unauthorized access \ncan manipulate the input list, potentially accessing sensitive data.\n  - Original:\n  return sum(numbers) / len(numbers)\n  + Suggested fix:\n  return sum(filtered_numbers) / len(filtered_numbers)\nfiltered_numbers = [num for user in users for num in user.get('numbers', []) if\nuser['role'] == 'authorized']\n\n  This issue lies in the lack of proper access control, which could allow \nunauthorized users to manipulate sensitive data. By filtering numbers based on \nauthorized roles, as suggested, we ensure that only users with the appropriate \npermissions can view and modify the list, addressing the Broken Access Control \nvulnerability effectively.\n\n"
+  },
+  "glm4:latest|tests\\fixtures\\sample_pr\\config.py": {
+    "model": "glm4:latest",
+    "file": "tests\\fixtures\\sample_pr\\config.py",
+    "findings": 4,
+    "elapsed": 276.3,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\config.py...\n\n[analyze] tests\\fixtures\\sample_pr\\config.py: 0 function(s), 6 LOC\n--------------------- tests\\fixtures\\sample_pr\\config.py ----------------------\nLine 1 \u2014 CRITICAL \u2014 security_misconfiguration\n  Hardcoded API credentials are committed to source, which could lead to \nunauthorized access.\n  - Original:\n  STRIPE_SECRET_KEY = \"sk_live_51Hcd9fFAKEKEYFORTESTING0000000\"\n  + Suggested fix:\n  STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')\n\n  The hardcoded API credentials pose a significant security risk by leaving \nsensitive information exposed in the source code. By using \n`os.getenv('STRIPE_SECRET_KEY')`, we ensure that the secret key is loaded from \nan environment variable, which enhances security by keeping it out of the \ncodebase and reducing the risk of unauthorized access. This fix effectively \naddresses the security misconfiguration issue at hand.\n\nLine 2 \u2014 CRITICAL \u2014 sensitive_data_exposure\n  Hardcoded API credential 'STRIPE_SECRET_KEY' is exposed and committed to \nsource control.\n  - Original:\n  STRIPE_SECRET_KEY = \"sk_live_51Hcd9fFAKEKEYFORTESTING0000000\"\n  + Suggested fix:\n  # Corrected snippet:\n# Remove or comment out the line containing the hardcoded API credential.\n\n  The hardcoded API credential poses a critical security risk as it reveals \nsensitive information publicly. Your suggested fix removes this risk by \nensuring the secret key is not exposed in the codebase, aligning with best \npractices of keeping such credentials out of source control and within secure \nenvironment variables. This change enhances our application's security posture \nsignificantly.\n\nLine 4 \u2014 HIGH \u2014 hardcoded_secret\n  Line matches a pattern for a hardcoded credential or secret.\n  - Original:\n  STRIPE_SECRET_KEY = \"sk_live_51Hcd9fFAKEKEYFORTESTING0000000\"\n  + Suggested fix:\n  STRIPE_SECRET_KEY = os.environ.get(\"STRIPE_SECRET_KEY\")\n\n  This hardcoded secret is a security risk as it leaves sensitive information \nexposed to "
+  },
+  "glm4:latest|tests\\fixtures\\sample_pr\\db.py": {
+    "model": "glm4:latest",
+    "file": "tests\\fixtures\\sample_pr\\db.py",
+    "findings": 1,
+    "elapsed": 148.7,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\db.py...\n\n[analyze] tests\\fixtures\\sample_pr\\db.py: 1 function(s), 11 LOC\n----------------------- tests\\fixtures\\sample_pr\\db.py ------------------------\nLine 6 \u2014 CRITICAL \u2014 sql_injection\n  The query is vulnerable to SQL injection due to the unsafe string formatting.\n  - Original:\n  query = f\"SELECT * FROM users WHERE email='{email}'\"\n  + Suggested fix:\n  query = \"SELECT * FROM users WHERE email=%s\" % (email,)\n\n  The vulnerability at line 6 is critical because it exposes your application \nto SQL injection attacks, allowing an attacker to manipulate the database query\nwith malicious intent. The suggested fix uses a parameterized query, which \nsafely incorporates user input without directly concatenating it into the query\nstring. This method ensures that the input is treated as data rather than \nexecutable code, significantly reducing the risk of injection attacks.\n\n"
+  },
+  "glm4:latest|tests\\fixtures\\sample_pr\\handlers.py": {
+    "model": "glm4:latest",
+    "file": "tests\\fixtures\\sample_pr\\handlers.py",
+    "findings": 2,
+    "elapsed": 213.3,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\handlers.py...\n\n[analyze] tests\\fixtures\\sample_pr\\handlers.py: 1 function(s), 9 LOC\n-------------------- tests\\fixtures\\sample_pr\\handlers.py ---------------------\nLine 3 \u2014 MEDIUM \u2014 broken_access_control\n  The function 'safe_parse_amount' does not perform any server-side \nauthorization checks, allowing users to manipulate inputs that could \npotentially access unauthorized data.\n  - Original:\n  try:\n        return float(raw_value)\n    except:\n        return None\n  + Suggested fix:\n  def safe_parse_amount(user_id, raw_value):\n    if user_id == 1:  # Example condition for authorization check\n        try:\n            return float(raw_value)\n        except:\n            return None\n    else:\n        raise PermissionError(\"Unauthorized access\")\n\n  The issue here is that without proper access control, any user can \npotentially parse amounts, which could lead to unauthorized data access. The \nsuggested fix adds an authorization check at the function level, ensuring only \nusers with appropriate permissions can execute the operation, thereby \naddressing the broken access control concern.\n\nLine 7 \u2014 HIGH \u2014 security_issue\n  The bare except statement catches all exceptions, including those that are \nnot ValueError, which may lead to a silent failure and potential security \nrisks.\n  - Original:\n  except:\n        return None\n  + Suggested fix:\n  except ValueError:\n    return None\n\n  The problem here is that a bare `except:` statement allows for catching all \nexceptions without distinction, which can mask other bugs or lead to silent \nfailures. Your suggested fix narrows down the exception handling to \nspecifically catch `ValueError`, which should help prevent unexpected issues \nfrom going unnoticed. It's a good practice to handle exceptions more precisely \nto ensure robust error management.\n\n"
+  },
+  "glm4:latest|tests\\fixtures\\sql_injection.py": {
+    "model": "glm4:latest",
+    "file": "tests\\fixtures\\sql_injection.py",
+    "findings": 2,
+    "elapsed": 245.5,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sql_injection.py...\n\n[analyze] tests\\fixtures\\sql_injection.py: 2 function(s), 19 LOC\n----------------------- tests\\fixtures\\sql_injection.py -----------------------\nLine 6 \u2014 HIGH \u2014 sql_injection\n  User input is concatenated directly into a SQL query without sanitization, \nleading to potential SQL injection vulnerabilities.\n  - Original:\n  query = \"SELECT * FROM users WHERE id=\" + user_id\n  + Suggested fix:\n  query = \"SELECT * FROM users WHERE id=\" + int(user_id)\n\n  The issue here lies in directly concatenating user input into a SQL query \nwithout sanitization, which can expose your application to SQL injection \nattacks. Your suggested fix addresses this by ensuring that the `user_id` is \nconverted to an integer before being included in the query, reducing the risk \nof malicious input altering the query's intent. This aligns with best practices\nfor preventing injection vulnerabilities.\n\nLine 9 \u2014 MEDIUM \u2014 insecure_error_handling\n  The 'except' block is used without specifying the exception, which will catch\nZeroDivisionError and all other exceptions. This can lead to silent failures or\nthe application continuing in an unintended state.\n  - Original:\n  except:\n        pass\n  + Suggested fix:\n  except ZeroDivisionError:\n        pass\n\n  Using `except ZeroDivisionError:` specifically targets the intended \nexception, avoiding unintended catches of other exceptions that could lead to \nsilent failures or misbehaving application states. This approach enhances the \ncode's robustness and clarity by focusing on a single known issue.\n\n"
+  },
+  "qwen3:8b|tests\\fixtures\\clean.py": {
+    "model": "qwen3:8b",
+    "file": "tests\\fixtures\\clean.py",
+    "findings": 0,
+    "elapsed": 503.1,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\clean.py...\n\n[analyze] tests\\fixtures\\clean.py: 1 function(s), 8 LOC\nNo issues found.\n"
+  },
+  "qwen3:8b|tests\\fixtures\\sample_pr\\config.py": {
+    "model": "qwen3:8b",
+    "file": "tests\\fixtures\\sample_pr\\config.py",
+    "findings": 0,
+    "elapsed": 300.0,
+    "error": "TIMEOUT (>300s)",
+    "output": ""
+  },
+  "qwen3:8b|tests\\fixtures\\sample_pr\\db.py": {
+    "model": "qwen3:8b",
+    "file": "tests\\fixtures\\sample_pr\\db.py",
+    "findings": 0,
+    "elapsed": 300.0,
+    "error": "TIMEOUT (>300s)",
+    "output": ""
+  },
+  "qwen3:8b|tests\\fixtures\\sample_pr\\handlers.py": {
+    "model": "qwen3:8b",
+    "file": "tests\\fixtures\\sample_pr\\handlers.py",
+    "findings": 0,
+    "elapsed": 300.0,
+    "error": "TIMEOUT (>300s)",
+    "output": ""
+  },
+  "qwen3:8b|tests\\fixtures\\sql_injection.py": {
+    "model": "qwen3:8b",
+    "file": "tests\\fixtures\\sql_injection.py",
+    "findings": 0,
+    "elapsed": 300.0,
+    "error": "TIMEOUT (>300s)",
+    "output": ""
+  },
+  "llama3.1:8b|tests\\fixtures\\clean.py": {
+    "model": "llama3.1:8b",
+    "file": "tests\\fixtures\\clean.py",
+    "findings": 1,
+    "elapsed": 343.6,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\clean.py...\n\n[analyze] tests\\fixtures\\clean.py: 1 function(s), 8 LOC\n--------------------------- tests\\fixtures\\clean.py ---------------------------\nLine 1 \u2014 LOW \u2014 A03: Injection\n  Potential command injection vulnerability due to string concatenation with \nuser input in the function name and docstring.\n  - Original:\n  \"\"\"\n# A file with no known issues \u2014 used to check for false positives.\n##\ndef average(numbers: list) -> float:\n    \"\"\"\n    Return the arithmetic mean of a non-empty list of numbers.\n    ##\n    if not numbers:\n        raise ValueError(\"numbers must not be empty\")\n    return sum(numbers) / len(numbers)\n\"\"\"\n  + Suggested fix:\n  def average(numbers: list) -> float:\n    \"\"\"Return the arithmetic mean of a non-empty list of numbers.\"\"\"\n    if not numbers:\n        raise ValueError(\"numbers must not be empty\")\n    return sum(numbers) / len(numbers)\n\n  Hey! I noticed you're using string concatenation to build the function name \nand docstring, which is vulnerable to injection attacks if an attacker can \nmanipulate the input values. This could potentially lead to unexpected behavior\nor security breaches. To fix this, we should use a safer approach like \nf-strings or the `str.format()` method, but in this case, it's not necessary \nsince there are no dynamic inputs being used here.\n\n"
+  },
+  "llama3.1:8b|tests\\fixtures\\sample_pr\\config.py": {
+    "model": "llama3.1:8b",
+    "file": "tests\\fixtures\\sample_pr\\config.py",
+    "findings": 3,
+    "elapsed": 239.7,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\config.py...\n\n[analyze] tests\\fixtures\\sample_pr\\config.py: 0 function(s), 6 LOC\n--------------------- tests\\fixtures\\sample_pr\\config.py ----------------------\nLine 4 \u2014 HIGH \u2014 security\n  Hardcoded API credential committed to source.\n  - Original:\n  \"STRIPE_SECRET_KEY = \"\"\"sk_live_51Hcd9fFAKEKEYFORTESTING0000000\"\"\"\"\n  + Suggested fix:\n  import os\nSTRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')\n\n  Hardcoding API credentials is a security risk because it exposes sensitive \ninformation to anyone with access to your codebase. Using \n`os.environ.get('STRIPE_SECRET_KEY')` instead ensures that the key comes from \nan environment variable, which should be set securely and not committed to \nsource control. This fix prevents potential misuse of our Stripe secret key.\n\nLine 4 \u2014 HIGH \u2014 hardcoded_secret\n  Line matches a pattern for a hardcoded credential or secret.\n  - Original:\n  STRIPE_SECRET_KEY = \"sk_live_51Hcd9fFAKEKEYFORTESTING0000000\"\n  + Suggested fix:\n  import os\nfrom dotenv import load_dotenv\nload_dotenv()\n\nSTRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')\n\n  I'm concerned that hardcoding a secret key like this makes it vulnerable to \nbeing exposed publicly. This is especially problematic since API keys should \nideally not be hardcoded and risk being committed to version control. Using an \nenvironment variable instead, as I've suggested, helps keep sensitive \ninformation secure.\n\n"
+  },
+  "llama3.1:8b|tests\\fixtures\\sample_pr\\db.py": {
+    "model": "llama3.1:8b",
+    "file": "tests\\fixtures\\sample_pr\\db.py",
+    "findings": 1,
+    "elapsed": 191.8,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\db.py...\n\n[analyze] tests\\fixtures\\sample_pr\\db.py: 1 function(s), 11 LOC\n----------------------- tests\\fixtures\\sample_pr\\db.py ------------------------\nLine 8 \u2014 CRITICAL \u2014 sql_injection\n  SQL injection via string formatting in find_user_by_email function.\n  - Original:\n  query = f\"SELECT * FROM users WHERE email='{email}'\"\n  + Suggested fix:\n  query = \"SELECT * FROM users WHERE email=%s\"\ncursor.execute(query, (email,))\n\n  The problem is that by directly inserting the `email` variable into the SQL \nquery using string formatting, we're vulnerable to SQL injection attacks where \nan attacker could inject malicious SQL code. \n\nThe suggested fix addresses this by using a parameterized query (`query = \n\"SELECT * FROM users WHERE email=%s\"`), which separates the user input from the\nactual SQL query and prevents any injected code from being executed.\n\n"
+  },
+  "llama3.1:8b|tests\\fixtures\\sample_pr\\handlers.py": {
+    "model": "llama3.1:8b",
+    "file": "tests\\fixtures\\sample_pr\\handlers.py",
+    "findings": 2,
+    "elapsed": 278.8,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\handlers.py...\n\n[analyze] tests\\fixtures\\sample_pr\\handlers.py: 1 function(s), 9 LOC\n-------------------- tests\\fixtures\\sample_pr\\handlers.py ---------------------\nLine 7 \u2014 LOW \u2014 broken_access_control\n  Bare except can mask potential exceptions and obscure bugs; consider specific\nexception types for better error handling.\n  - Original:\n  try: return float(raw_value) except: return None\n  + Suggested fix:\n  try: \n    return float(raw_value) \nexcept ValueError:\n    return None\n\n  Hey there, I took a look at your PR and noticed that you're catching all \nexceptions with a bare `except` block. The problem is that this can mask \npotential exceptions and make it harder to diagnose bugs in production. \n\nThe suggested fix addresses this by only catching specific `ValueError` \nexceptions that occur when trying to convert `raw_value` to a float, which \nmakes the error handling more targeted and informative.\n\nLine 7 \u2014 LOW \u2014 insecure_design\n  Function does not validate user input, allowing potential security threats. \nConsider using specific exception types for better error handling.\n  - Original:\n  try: return float(raw_value) except: return None\n  + Suggested fix:\n  try:\n    return float(raw_value)\nexcept ValueError:\n    return None\n\n  Here's how I'd explain this to the developer:\n\n\"Hey, I noticed that the function doesn't handle invalid inputs properly and \ncould potentially lead to security issues if not caught. The suggested fix adds\na specific exception type for `ValueError` which ensures we're only catching \nactual floating-point conversion errors, preventing unexpected behavior or \npotential security risks.\"\n\n"
+  },
+  "llama3.1:8b|tests\\fixtures\\sql_injection.py": {
+    "model": "llama3.1:8b",
+    "file": "tests\\fixtures\\sql_injection.py",
+    "findings": 2,
+    "elapsed": 308.1,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sql_injection.py...\n\n[analyze] tests\\fixtures\\sql_injection.py: 2 function(s), 19 LOC\n----------------------- tests\\fixtures\\sql_injection.py -----------------------\nLine 9 \u2014 CRITICAL \u2014 sql_injection\n  Direct concatenation of user input into a SQL query: \"SELECT * FROM users \nWHERE id=\" + user_id. Use parameterized queries or prepared statements instead.\n  - Original:\n  \"SELECT * FROM users WHERE id=\" + user_id\n  + Suggested fix:\n  string sql = $\"SELECT * FROM users WHERE id = @{user_id}\"; \n\n// assuming you are using ADO.NET\nSqlCommand cmd = new SqlCommand(sql, connection);\ncmd.Parameters.AddWithValue(\"@{user_id}\", user_id);\n\n  Here's a concise review:\n\nThe issue here is that you're directly inserting the `user_id` into your SQL \nquery using string concatenation, making it vulnerable to SQL injection \nattacks. \n\nTo fix this, we can use parameterized queries or prepared statements by adding \nthe user ID as a parameter with a named placeholder `@{user_id}`, which \nprevents malicious input from being executed as code.\n\nLine 17 \u2014 MEDIUM \u2014 unhandled_exception\n  Bare except statement: ZeroDivisionError is silently swallowed.\n  - Original:\n  except:\n        pass\n  + Suggested fix:\n  except ZeroDivisionError:\n    pass\n\n  The bare except statement at line 17 is swallowing any unexpected errors that\nmight occur, including critical ones like KeyboardInterrupt, without providing \nany insight into what went wrong. The suggested fix catches only \nZeroDivisionError explicitly, which prevents silent bug hiding and allows us to\naddress the specific error that's occurring. This change ensures we're handling\nthis particular exception in a way that's both targeted and informative.\n\n"
+  },
+  "qwen2.5-coder:7b|tests\\fixtures\\clean.py": {
+    "model": "qwen2.5-coder:7b",
+    "file": "tests\\fixtures\\clean.py",
+    "findings": 0,
+    "elapsed": 142.3,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\clean.py...\n\n[analyze] tests\\fixtures\\clean.py: 1 function(s), 8 LOC\nNo issues found.\n"
+  },
+  "qwen2.5-coder:7b|tests\\fixtures\\sample_pr\\config.py": {
+    "model": "qwen2.5-coder:7b",
+    "file": "tests\\fixtures\\sample_pr\\config.py",
+    "findings": 3,
+    "elapsed": 207.2,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\config.py...\n\n[analyze] tests\\fixtures\\sample_pr\\config.py: 0 function(s), 6 LOC\n--------------------- tests\\fixtures\\sample_pr\\config.py ----------------------\nLine 3 \u2014 CRITICAL \u2014 hardcoded_credentials\n  Hardcoded API credential committed to source.\n  - Original:\n  STRIPE_SECRET_KEY = \"sk_live_51Hcd9fFAKEKEYFORTESTING0000000\"\n  + Suggested fix:\n  STRIPE_SECRET_KEY = os.getenv(\"STRIPE_SECRET_KEY\")\n\n  This is a critical issue because hardcoded API credentials expose sensitive \ninformation if the codebase ever gets shared or leaked. Using \n`os.getenv(\"STRIPE_SECRET_KEY\")` ensures that the secret key is stored securely\nin the environment and not exposed in the source code, enhancing security.\n\nLine 4 \u2014 HIGH \u2014 hardcoded_secret\n  Line matches a pattern for a hardcoded credential or secret.\n  - Original:\n  STRIPE_SECRET_KEY = \"sk_live_51Hcd9fFAKEKEYFORTESTING0000000\"\n  + Suggested fix:\n  STRIPE_SECRET_KEY = os.getenv(\"STRIPE_SECRET_KEY\")\n\n  This is a problem because hardcoding sensitive information like API keys can \nexpose them if your codebase is ever compromised. The suggested fix addresses \nthis by retrieving the secret key from an environment variable using \n`os.getenv(\"STRIPE_SECRET_KEY\")`, ensuring that the key remains secure and not \nvisible in your source code.\n\n"
+  },
+  "qwen2.5-coder:7b|tests\\fixtures\\sample_pr\\db.py": {
+    "model": "qwen2.5-coder:7b",
+    "file": "tests\\fixtures\\sample_pr\\db.py",
+    "findings": 1,
+    "elapsed": 161.4,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\db.py...\n\n[analyze] tests\\fixtures\\sample_pr\\db.py: 1 function(s), 11 LOC\n----------------------- tests\\fixtures\\sample_pr\\db.py ------------------------\nLine 5 \u2014 HIGH \u2014 sql_injection\n  SQL injection via string formatting.\n  - Original:\n  query = f\"SELECT * FROM users WHERE email='{email}'\"\n  + Suggested fix:\n  query = f\"SELECT * FROM users WHERE email=%s\"\ncursor.execute(query, (email,))\n\n  This PR introduces a high-risk SQL injection vulnerability due to string \nformatting with user input. The original code directly embeds `email` into the \nSQL query, allowing an attacker to manipulate it and execute arbitrary SQL \ncommands.\n\nThe suggested fix uses parameterized queries instead, which properly escapes \nthe `email` input by treating it as data rather than executable code. This \nensures that any malicious content in the email is treated as part of the query\nstring, preventing SQL injection attacks.\n\n"
+  },
+  "qwen2.5-coder:7b|tests\\fixtures\\sample_pr\\handlers.py": {
+    "model": "qwen2.5-coder:7b",
+    "file": "tests\\fixtures\\sample_pr\\handlers.py",
+    "findings": 2,
+    "elapsed": 226.1,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sample_pr\\handlers.py...\n\n[analyze] tests\\fixtures\\sample_pr\\handlers.py: 1 function(s), 9 LOC\n-------------------- tests\\fixtures\\sample_pr\\handlers.py ---------------------\nLine 4 \u2014 LOW \u2014 injection\n  The function 'safe_parse_amount' does not handle potential exceptions \nproperly and silently returns None, which could be exploited to bypass \nvalidation.\n  - Original:\n  try:\n        return float(raw_value)\n    except:\n        return None\n  + Suggested fix:\n  try:\n    return float(raw_value)\nexcept ValueError:\n    return None\n\n  This issue is a low-level security concern because the function \n`safe_parse_amount` does not handle exceptions properly. It catches all \nexceptions using a bare `except`, which can hide errors and make debugging more\ndifficult.\n\nThe suggested fix improves the situation by catching only the specific \n`ValueError` that occurs when the input cannot be converted to a float. This \nmakes it clear what went wrong and prevents other potential issues from being \nsilently ignored.\n\nLine 5 \u2014 CRITICAL \u2014 bad_exception_handling\n  Bare except clause catches all exceptions, including system-exiting \nexceptions like SystemExit and KeyboardInterrupt, which can lead to unexpected \nbehavior or program termination.\n  - Original:\n  except:\n  + Suggested fix:\n  except Exception as e:\n\n  This bare `except` clause is problematic because it catches all exceptions, \nincluding those like `SystemExit` and `KeyboardInterrupt`, which can cause \nunexpected behavior or program termination. The suggested fix of catching \nspecific exceptions (`except Exception as e:`) ensures that only intended \nexceptions are caught, allowing the program to handle them appropriately \nwithout accidentally terminating unexpectedly.\n\n"
+  },
+  "qwen2.5-coder:7b|tests\\fixtures\\sql_injection.py": {
+    "model": "qwen2.5-coder:7b",
+    "file": "tests\\fixtures\\sql_injection.py",
+    "findings": 3,
+    "elapsed": 335.1,
+    "error": "",
+    "output": "Reviewing 1 file(s) in tests\\fixtures\\sql_injection.py...\n\n[analyze] tests\\fixtures\\sql_injection.py: 2 function(s), 19 LOC\n----------------------- tests\\fixtures\\sql_injection.py -----------------------\nLine 5 \u2014 HIGH \u2014 sql_injection\n  SQL injection vulnerability - user_id is concatenated directly into the \nquery.\n  - Original:\n  query = \"SELECT * FROM users WHERE id=\" + user_id\n  + Suggested fix:\n  query = f\"SELECT * FROM users WHERE id={user_id}\"\n\n  This is a high-risk SQL injection vulnerability because you're directly \nconcatenating `user_id` into your SQL query without proper sanitization. An \nattacker could manipulate `user_id` to execute arbitrary SQL commands, \npotentially leading to data theft or system compromise.\n\nThe suggested fix using parameterized queries (`query = f\"SELECT * FROM users \nWHERE id={user_id}\"`) ensures that `user_id` is treated as a literal value \nrather than executable code, thus preventing any malicious input from altering \nthe query structure. This aligns with Python's best practices for SQL injection\nprevention and maintains the integrity of your database operations.\n\nLine 9 \u2014 HIGH \u2014 exception_handling\n  Bare except block swallows all exceptions silently in safe_divide function.\n  - Original:\n  except:\n        pass\n  + Suggested fix:\n  except Exception as e:\n    print(f\"An error occurred: {e}\")\n\n  The `except` block without specifying an exception type will catch all \nexceptions, including those that should not be silently ignored. This can make \ndebugging difficult and potentially hide critical issues. The suggested fix by \ncatching `Exception as e` and printing a message is better because it at least \nlogs the error, allowing for easier debugging while still preventing the \nprogram from crashing unexpectedly.\n\nLine 10 \u2014 HIGH \u2014 sensitive_operation\n  Bare except block swallows exceptions silently, including ZeroDivisionError.\n  - Original:\n  except:\n  + Suggested fix:\n  except Exception as e:\n\n  The bare `except:` block at line 10 c"
+  },
+  "phi4:14b|src\\eval\\holdout\\snippets\\ho_clean_correct_01.py": {
+    "model": "phi4:14b",
+    "file": "src\\eval\\holdout\\snippets\\ho_clean_correct_01.py",
+    "findings": 2,
+    "elapsed": 504.9,
+    "error": "",
+    "output": "Reviewing 1 file(s) in src\\eval\\holdout\\snippets\\ho_clean_correct_01.py...\n\n[analyze] src\\eval\\holdout\\snippets\\ho_clean_correct_01.py: 1 function(s), 17 LOC\n-------------- src\\eval\\holdout\\snippets\\ho_clean_correct_01.py ---------------\nLine 4 \u2014 MEDIUM \u2014 configuration\n  The database path is fetched from an environment variable with a default \nfallback to 'app.db'. If the environment variable is not set, it uses this \nhardcoded value. This could lead to potential security or operational issues if\nmultiple environments (e.g., development, testing, production) are configured \nincorrectly.\n  - Original:\n  db_path = os.getenv(\"DATABASE_PATH\", \"app.db\")\n  + Suggested fix:\n  import logging\n\ndef get_database_path():\n    db_path = os.getenv(\"DATABASE_PATH\")\n    if not db_path:\n        logging.warning(\"Environment variable 'DATABASE_PATH' is not set. Using\ndefault 'app.db'.\")\n        return \"app.db\"\n    return db_path\n\ndb_path = get_database_path()\n\n  The current approach can lead to security and operational risks if \nenvironments are misconfigured, as it silently defaults to `'app.db'` without \nnotifying when the environment variable is unset. The suggested fix enhances \ntransparency by logging a warning whenever the `DATABASE_PATH` is not provided \nvia an environment variable, thereby alerting developers or operators to \npotential configuration issues. This adjustment helps ensure that each \nenvironment is correctly set up and monitored while still providing a default \nfallback for convenience.\n\nLine 7 \u2014 MEDIUM \u2014 security_misconfiguration\n  The connection string and queries should be audited to ensure no verbose \nerror messages or stack traces are returned in case of database errors.\n  - Original:\n  with closing(sqlite3.connect(db_path)) as conn:\n  + Suggested fix:\n  def log_error(e):\n    # Implement logging mechanism here, e.g., write to a file or use logging \nlibrary\n    pass\n\ntry:\n    with sqlite3.connect(db_path) as conn:\n        pass  # Your database operations here\ne"
+  }
+}
