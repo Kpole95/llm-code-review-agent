@@ -88,9 +88,14 @@ uv run python -m src.cli review path/to/file.py --provider deepseek --model deep
 
 ## Multi-provider support
 
-The model backend is swappable — set `MODEL_PROVIDER` in `.env` or pick a provider from the Streamlit sidebar. The same pipeline, same evaluation harness, and same output schema work regardless of which model is running underneath.
+The model backend is swappable — set `MODEL_PROVIDER` in `.env` or pick a provider
+from the Streamlit sidebar. The same pipeline, same evaluation harness, and same
+output schema work regardless of which model is running underneath.
+
+![Provider selector](docs/images/provider-selector.gif)
 
 ### Tested providers
+...
 
 | Provider | Model | Findings on test snippet | Notes |
 |---|---|---|---|
